@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: ${SA_PASSWORD}
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+    ports:
+      - "1433:1433"
+    networks:
+      - db-network
+
+  sql-management-studio:
+    image: microsoft/mssql-tools
+    environment:
+      SERVER: sql-server
+      UID: sa
+      PWD: ${SA_PASSWORD}
+    depends_on:
+      - sql-server
+    networks:
+      - db-network
+
+networks:
+  db-network:
+    driver: bridge
+
